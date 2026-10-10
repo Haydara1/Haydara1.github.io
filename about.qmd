@@ -1,0 +1,18 @@
+
+---
+title: "About"
+---
+
+I am building this publication to explore mathematics, physics,
+and scientific computing through careful research and clear explanations.
+
+My interests include mathematical analysis, abstract algebra,
+quantum mechanics, quantum cryptography, and computational modelling.
+
+The aim is to make technical ideas accessible without sacrificing
+mathematical precision.
+
+## Contact and code
+
+- [My GitHub profile](https://github.com/Haydara1)
+- [My LinkedIn profile](https://linkedin.com/in/haydara-allahham)

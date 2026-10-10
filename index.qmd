@@ -1,0 +1,49 @@
+
+---
+title: "Mathematics meets the real world"
+---
+
+Welcome to **Scientific Notes**, an independent publication exploring
+the ideas, equations, and computational experiments behind mathematics
+and physics.
+
+I write about concepts that deserve more than a formula: how they work,
+why they matter, and what we can discover by examining them carefully.
+
+## Explore the publication
+
+::: {layout-ncol=2}
+
+### Mathematics
+
+From abstract algebra and analysis to mathematical structures that
+appear throughout science.
+
+[Explore mathematics →](articles.qmd#mathematics)
+
+
+### Physics
+
+Understand physical phenomena through mathematical models, derivations,
+and first principles.
+
+[Explore physics →](articles.qmd#physics)
+
+
+### Quantum information
+
+Explore quantum states, quantum measurements, and the mathematics of
+quantum cryptography.
+
+[Explore quantum information →](articles.qmd#quantum-information)
+
+
+### Scientific computing
+
+Numerical experiments, simulations, visualisations, and code that
+connect mathematical theory to computational results.
+
+[Explore projects →](projects.qmd)
+
+
+:::

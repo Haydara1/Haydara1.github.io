@@ -1,0 +1,23 @@
+
+---
+title: "Scientific Projects"
+---
+
+This section contains computational projects that connect theory
+to experiment.
+
+## Featured projects
+
+<!--
+- **Quantum cryptography:** Simulating quantum key distribution
+  and studying the effect of measurement and interception.
+
+- **Numerical methods:** Exploring differential equations through
+  computational experiments.
+
+- **Mathematical visualisation:** Turning abstract structures into
+  visual and interactive demonstrations.
+
+Source code and reproducibility notes will accompany projects
+where appropriate.
+-->
