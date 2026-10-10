@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "articles.html",
+    "href": "articles.html",
+    "title": "Articles",
+    "section": "",
+    "text": "Explore articles by subject, from mathematical proofs to physical models and computational experiments."
+  },
+  {
+    "objectID": "articles.html#mathematics",
+    "href": "articles.html#mathematics",
+    "title": "Articles",
+    "section": "Mathematics",
+    "text": "Mathematics\nProofs, definitions, structures, and mathematical intuition."
+  },
+  {
+    "objectID": "articles.html#physics",
+    "href": "articles.html#physics",
+    "title": "Articles",
+    "section": "Physics",
+    "text": "Physics\nMathematical models of physical phenomena."
+  },
+  {
+    "objectID": "articles.html#quantum-information",
+    "href": "articles.html#quantum-information",
+    "title": "Articles",
+    "section": "Quantum information",
+    "text": "Quantum information\nQuantum mechanics, information theory, and cryptography."
+  },
+  {
+    "objectID": "articles.html#research-notes",
+    "href": "articles.html#research-notes",
+    "title": "Articles",
+    "section": "Research notes",
+    "text": "Research notes\nDetailed explorations of papers, conjectures, and open problems."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mathematics meets the real world",
+    "section": "",
+    "text": "Welcome to Scientific Notes, an independent publication exploring the ideas, equations, and computational experiments behind mathematics and physics.\nI write about concepts that deserve more than a formula: how they work, why they matter, and what we can discover by examining them carefully."
+  },
+  {
+    "objectID": "index.html#explore-the-publication",
+    "href": "index.html#explore-the-publication",
+    "title": "Mathematics meets the real world",
+    "section": "Explore the publication",
+    "text": "Explore the publication\n\n\n\nMathematics\nFrom abstract algebra and analysis to mathematical structures that appear throughout science.\n\n\nExplore mathematics →\n\n\n\n\nPhysics\nUnderstand physical phenomena through mathematical models, derivations, and first principles.\n\n\nExplore physics →\n\n\n\n\nQuantum information\nExplore quantum states, quantum measurements, and the mathematics of quantum cryptography.\n\n\nExplore quantum information →\n\n\n\n\nScientific computing\nNumerical experiments, simulations, visualisations, and code that connect mathematical theory to computational results.\n\n\nExplore projects →"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Scientific Projects",
+    "section": "",
+    "text": "This section contains computational projects that connect theory to experiment."
+  },
+  {
+    "objectID": "projects.html#featured-projects",
+    "href": "projects.html#featured-projects",
+    "title": "Scientific Projects",
+    "section": "Featured projects",
+    "text": "Featured projects"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I am building this publication to explore mathematics, physics, and scientific computing through careful research and clear explanations.\nMy interests include mathematical analysis, abstract algebra, quantum mechanics, quantum cryptography, and computational modelling.\nThe aim is to make technical ideas accessible without sacrificing mathematical precision."
+  },
+  {
+    "objectID": "about.html#contact-and-code",
+    "href": "about.html#contact-and-code",
+    "title": "About",
+    "section": "Contact and code",
+    "text": "Contact and code\n\nMy GitHub profile\nMy LinkedIn profile"
+  }
+]

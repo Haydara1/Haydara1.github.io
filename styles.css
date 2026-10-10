@@ -1,0 +1,65 @@
+
+/* Modern scientific identity */
+
+:root {
+  --science-ink: #182b3a;
+  --science-accent: #168c88;
+  --science-muted: #657786;
+  --science-background: #f7f9fb;
+}
+
+body {
+  color: var(--science-ink);
+  line-height: 1.75;
+  letter-spacing: 0.005em;
+}
+
+.navbar {
+  border-bottom: 1px solid #e4eaf0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+a {
+  color: var(--science-accent);
+}
+
+a:hover {
+  color: #106b68;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.035em;
+  font-weight: 650;
+}
+
+h1 {
+  line-height: 1.2;
+  margin-bottom: 1.2rem;
+}
+
+blockquote {
+  border-left: 3px solid var(--science-accent);
+  padding-left: 1rem;
+  color: var(--science-muted);
+}
+
+pre {
+  border: 1px solid #e4eaf0;
+  border-radius: 10px;
+}
+
+.callout {
+  border-radius: 8px;
+}
+
+#quarto-content {
+  padding-bottom: 3rem;
+}
+
+.nav-footer {
+  border-top: 1px solid #e4eaf0;
+}
