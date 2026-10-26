@@ -14,18 +14,32 @@
     "text": "Contact and code\n\nMy GitHub profile\nMy LinkedIn profile"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Mathematics meets the real world",
+    "objectID": "posts/BB84.html",
+    "href": "posts/BB84.html",
+    "title": "Protocol BB84",
     "section": "",
-    "text": "Welcome to Scientific Notes, an independent publication exploring the ideas, equations, and computational experiments behind mathematics and physics.\nI write about concepts that deserve more than a formula: how they work, why they matter, and what we can discover by examining them carefully."
+    "text": "A glimpse into the first quantum key distribution protocol\n\n\nQuantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process.\n\n\n\nBefore diving into the BB84 protocol, it’s essential to understand some fundamental concepts in quantum mechanics.\n\nQubits: The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.\nQuantum states: The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are (|0) and (|1), which represent the classical bits 0 and 1, respectively.\n\nTo each bit, we can assign a basis: + The rectilinear basis: $$ + The diagonal basis\n\nMeasurement: In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome.\n\n\n\n\nHow to read this section?\nYou will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled “Security considerations” and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.\n\n\nSince this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn’t mean other parties can’t acces the information, but it means that we can be sure that the information is coming from the right source.\nSo for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.\nSeucrity considerations: Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.\n\n\n\nAlice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.\nMeanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.\nSeucrity considerations:\n\n\n\nAlice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.\nSeucrity considerations:\n\n\n\nBob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob’s bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.\nSeucrity considerations:\n\n\n\nAlice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.\nThe subset that they compare is called the punctured key, which will be discarded after the comparison."
   },
   {
-    "objectID": "index.html#explore-the-publication",
-    "href": "index.html#explore-the-publication",
-    "title": "Mathematics meets the real world",
-    "section": "Explore the publication",
-    "text": "Explore the publication\n\n\n\nMathematics\nFrom abstract algebra and analysis to mathematical structures that appear throughout science.\n\n\nExplore mathematics →\n\n\n\n\nPhysics\nUnderstand physical phenomena through mathematical models, derivations, and first principles.\n\n\nExplore physics →\n\n\n\n\nQuantum information\nExplore quantum states, quantum measurements, and the mathematics of quantum cryptography.\n\n\nExplore quantum information →\n\n\n\n\nScientific computing\nNumerical experiments, simulations, visualisations, and code that connect mathematical theory to computational results.\n\n\nExplore projects →"
+    "objectID": "posts/BB84.html#introduction",
+    "href": "posts/BB84.html#introduction",
+    "title": "Protocol BB84",
+    "section": "",
+    "text": "Quantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process."
+  },
+  {
+    "objectID": "posts/BB84.html#preliminary-concepts",
+    "href": "posts/BB84.html#preliminary-concepts",
+    "title": "Protocol BB84",
+    "section": "",
+    "text": "Before diving into the BB84 protocol, it’s essential to understand some fundamental concepts in quantum mechanics.\n\nQubits: The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.\nQuantum states: The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are (|0) and (|1), which represent the classical bits 0 and 1, respectively.\n\nTo each bit, we can assign a basis: + The rectilinear basis: $$ + The diagonal basis\n\nMeasurement: In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome."
+  },
+  {
+    "objectID": "posts/BB84.html#the-protocol",
+    "href": "posts/BB84.html#the-protocol",
+    "title": "Protocol BB84",
+    "section": "",
+    "text": "How to read this section?\nYou will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled “Security considerations” and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.\n\n\nSince this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn’t mean other parties can’t acces the information, but it means that we can be sure that the information is coming from the right source.\nSo for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.\nSeucrity considerations: Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.\n\n\n\nAlice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.\nMeanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.\nSeucrity considerations:\n\n\n\nAlice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.\nSeucrity considerations:\n\n\n\nBob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob’s bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.\nSeucrity considerations:\n\n\n\nAlice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.\nThe subset that they compare is called the punctured key, which will be discarded after the comparison."
   },
   {
     "objectID": "projects.html",
@@ -40,6 +54,20 @@
     "title": "Scientific Projects",
     "section": "Featured projects",
     "text": "Featured projects"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mathematics, Physics, and Scientific Computing",
+    "section": "",
+    "text": "Welcome to Scientific Notes, an independent publication exploring the ideas, equations, and computational experiments behind mathematics and physics.\nI write about concepts that deserve more than a formula: how they work, why they matter, and what we can discover by examining them carefully."
+  },
+  {
+    "objectID": "index.html#explore-the-publication",
+    "href": "index.html#explore-the-publication",
+    "title": "Mathematics, Physics, and Scientific Computing",
+    "section": "Explore the publication",
+    "text": "Explore the publication\n\n\n\nMathematics\nFrom abstract algebra and analysis to mathematical structures that appear throughout science.\n\n\nExplore mathematics →\n\n\n\n\nPhysics\nUnderstand physical phenomena through mathematical models, derivations, and first principles.\n\n\nExplore physics →\n\n\n\n\nQuantum information\nExplore quantum states, quantum measurements, and the mathematics of quantum cryptography.\n\n\nExplore quantum information →\n\n\n\n\nScientific computing\nNumerical experiments, simulations, visualisations, and code that connect mathematical theory to computational results.\n\n\nExplore projects →"
   },
   {
     "objectID": "articles.html",

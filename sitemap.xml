@@ -2,18 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://Haydara1.github.io/about.html</loc>
-    <lastmod>2026-10-10T18:19:04.614Z</lastmod>
+    <lastmod>2026-10-26T12:51:18.282Z</lastmod>
   </url>
   <url>
-    <loc>https://Haydara1.github.io/index.html</loc>
-    <lastmod>2026-10-10T18:19:04.614Z</lastmod>
+    <loc>https://Haydara1.github.io/posts/BB84.html</loc>
+    <lastmod>2026-10-26T12:51:18.282Z</lastmod>
   </url>
   <url>
     <loc>https://Haydara1.github.io/projects.html</loc>
-    <lastmod>2026-10-10T18:19:04.614Z</lastmod>
+    <lastmod>2026-10-26T12:51:18.282Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Haydara1.github.io/index.html</loc>
+    <lastmod>2026-10-26T12:51:18.282Z</lastmod>
   </url>
   <url>
     <loc>https://Haydara1.github.io/articles.html</loc>
-    <lastmod>2026-10-10T18:19:04.614Z</lastmod>
+    <lastmod>2026-10-26T12:51:18.282Z</lastmod>
   </url>
 </urlset>
