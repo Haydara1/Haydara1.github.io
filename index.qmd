@@ -1,6 +1,6 @@
 
 ---
-title: "Mathematics meets the real world"
+title: "Mathematics, Physics, and Scientific Computing"
 ---
 
 Welcome to **Scientific Notes**, an independent publication exploring

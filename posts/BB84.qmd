@@ -1,0 +1,66 @@
+# Protocol BB84
+
+**A glimpse into the first quantum key distribution protocol**
+
+## Introduction
+
+Quantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process.
+
+## Preliminary concepts
+
+Before diving into the BB84 protocol, it's essential to understand some fundamental concepts in quantum mechanics.
+
+* **Qubits:** The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.
+
+* **Quantum states:** The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are \(|0\rangle\) and \(|1\rangle\), which represent the classical bits 0 and 1, respectively.
+
+  * To each bit, we can assign a basis: 
+        + The **rectilinear basis**: $\plus $\equals 
+        + The **diagonal basis**
+
+* **Measurement:** In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome.
+
+## The protocol
+
+*How to read this section?*
+
+You will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled "Security considerations" and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.
+
+
+### 0. Predefined parameters
+
+Since this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn't mean other parties can't acces the information, but it means that we can be sure that the information is coming from the right source.
+
+So for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.
+
+*Seucrity considerations:*
+Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.
+
+### 1. Preparation
+
+Alice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.
+
+Meanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.
+
+*Seucrity considerations:*
+
+### 2. First transmission
+
+Alice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.
+
+*Seucrity considerations:*
+
+### 3. Second transmission
+
+Bob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob's bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.
+
+*Seucrity considerations:*
+
+### 4. Third transmission
+
+Alice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.
+
+The subset that they compare is called the punctured key, which will be discarded after the comparison.
+
+### 5. Key generation
+
