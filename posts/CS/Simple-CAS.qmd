@@ -1,0 +1,16 @@
+---
+title: "Build your own simple CAS"
+---
+
+A Computer Algebra System (CAS) is a software that can perform symbolic mathematics. In this post, we will discuss how to build a simple CAS. The goal is to understand the basic principles behind symbolic computation and how to implement them in code.
+
+### Introduction:
+
+Mathematics can be seen as language, we can write expression, those can be either true or false. We can have also equivalent expressions, and we can manipulate them to obtain new expressions. For example, let's consider the following definition:
+
+$$
+f \in \mathcal{C}^0(\mathbb{R}) \iff \forall \epsilon > 0, \exists \delta > 0, \forall x \in \mathbb{R}, |x - a| < \delta \implies |f(x) - f(a)| < \epsilon
+$$
+
+This long expression, that only contains a few symbols, defines a continuous function. Through training and using representations, humans can understand and manipulate such expressions, but how would a computer do it?
+
