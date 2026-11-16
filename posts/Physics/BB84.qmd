@@ -1,66 +1,465 @@
-# Protocol BB84
-
-**A glimpse into the first quantum key distribution protocol**
+---
+title: "Building a BB84 Quantum Cryptography Simulator in Java"
+subtitle: "The first quantum key distribution protocol"
+author: "Haydara Allahham"
+date: "2026-11-16"
+categories: [java, quantum-computing, cryptography, python]
+description: "A practical project blog and tutorial for building a BB84 simulator, testing it, and analysing its behaviour."
+---
 
 ## Introduction
 
-Quantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process.
+Quantum cryptography is one of the most interesting places where mathematics, physics, and computer science meet. I wanted to explore that intersection by building a small simulator of **BB84**, one of the best-known quantum key distribution (QKD) protocols.
 
-## Preliminary concepts
+The goal was not to build a production-ready cryptographic system. Instead, I wanted to understand the protocol by implementing its main steps, testing the software, and investigating how an eavesdropper can introduce detectable errors.
 
-Before diving into the BB84 protocol, it's essential to understand some fundamental concepts in quantum mechanics.
+I built the simulator in **Java** and planned the experimental analysis in **Python**, using a CSV file to transfer results from the simulator into a Jupyter notebook.
 
-* **Qubits:** The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.
+This post explains the ideas behind the project, the implementation, what I learned, and how someone else could build a similar project.
 
-* **Quantum states:** The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are \(|0\rangle\) and \(|1\rangle\), which represent the classical bits 0 and 1, respectively.
+::: {.callout-note}
+This is an educational simulation of the idealised BB84 protocol and a simple intercept-resend attack. It is not a secure QKD implementation and should not be used to protect real communications.
+:::
 
-  * To each bit, we can assign a basis: 
-        + The **rectilinear basis**: $\plus $\equals 
-        + The **diagonal basis**
+## 1. The idea behind BB84
 
-* **Measurement:** In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome.
+BB84 was introduced by Charles Bennett and Gilles Brassard in 1984. Its central idea is that two parties, conventionally called **Alice** and **Bob**, can establish a shared bit string by sending quantum states and publicly comparing the bases they used.
 
-## The protocol
+A third party, **Eve**, represents a possible eavesdropper (spy).
 
-*How to read this section?*
+### 1.1 Bits, qubits, and bases
 
-You will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled "Security considerations" and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.
+In this simulator, a qubit is represented by a bit value and the basis in which it was prepared.
 
+I use two bases:
 
-### 0. Predefined parameters
+- The computational basis, written here as `PLUS`: states representing bit 0 and bit 1.
+- The diagonal basis, written here as `TIMES`: two states rotated by 45 degrees relative to the computational basis.
 
-Since this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn't mean other parties can't acces the information, but it means that we can be sure that the information is coming from the right source.
+The names are implementation choices; the important feature is that the two bases are mutually unbiased. If a qubit is measured in the basis in which it was prepared, the bit is recovered. If it is measured in the other basis, the result is random, with equal probability of 0 or 1.
 
-So for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.
+For the idealised model, this measurement rule can be represented as:
 
-*Seucrity considerations:*
-Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.
+\[
+P(\text{correct bit}) =
+\begin{cases}
+1 & \text{if the measurement basis matches the preparation basis},\\
+1/2 & \text{otherwise}.
+\end{cases}
+\]
 
-### 1. Preparation
+This simple rule is the core of the simulator's `Qubit` model.
 
-Alice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.
+### 1.2 The protocol, step by step
 
-Meanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.
+A simplified BB84 exchange works as follows:
 
-*Seucrity considerations:*
+1. Alice randomly generates a sequence of bits.
+2. Alice independently chooses a random basis for each bit and prepares the corresponding qubit.
+3. Bob independently chooses a random basis for each incoming qubit and measures it.
+4. Over a public classical channel, Alice and Bob compare the bases they used, but not the entire bit sequence.
+5. They keep only the positions where their bases matched. This is called **sifting**.
+6. They publicly compare a randomly selected subset of the sifted bits to estimate the error rate.
+7. If the estimated error rate is acceptable, the remaining bits can be treated as candidate key material.
 
-### 2. First transmission
+A real QKD system needs additional steps, including authenticated classical communication, error correction, privacy amplification, and finite-key security analysis. Those are outside the scope of this project.
 
-Alice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.
+## 2. Modelling the protocol in Java
 
-*Seucrity considerations:*
+I chose Java because it provides a useful object-oriented structure for representing the participants, quantum states, communication channels, and protocol itself.
 
-### 3. Second transmission
+The project is organised around a few main components.
 
-Bob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob's bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.
+### 2.1 The `Qubit` class
 
-*Seucrity considerations:*
+The `Qubit` class represents the simplified quantum state used by the simulator. It stores:
 
-### 4. Third transmission
+- the bit value;
+- the preparation basis.
 
-Alice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.
+Its measurement method takes a measurement basis. If that basis matches the preparation basis, it returns the original bit. Otherwise, it returns a random bit.
 
-The subset that they compare is called the punctured key, which will be discarded after the comparison.
+This is not a full quantum-mechanical state-vector simulator. It is a deliberately small model that captures the measurement behaviour needed to study BB84.
 
-### 5. Key generation
+### 2.2 The participants
 
+The simulator represents the three roles separately:
+
+- `Alice` prepares and sends the qubits.
+- `Bob` chooses measurement bases and measures the received qubits.
+- `Eve` can intercept qubits, measure them using her own randomly chosen bases, and resend newly prepared qubits.
+
+Separating these roles makes the protocol easier to understand and gives each class a clear responsibility.
+
+### 2.3 Communication channels
+
+I modelled communication with a `Communication` class. The project distinguishes between a quantum channel, over which qubits are sent, and a public classical channel, over which information such as basis choices is exchanged.
+
+This distinction matters conceptually: the quantum channel carries quantum states, while the classical channel is used for public discussion.
+
+### 2.4 The `Protocol` and `BB84` classes
+
+The abstract `Protocol` class provides a common structure for protocols. `BB84` implements the actual sequence of operations.
+
+Keeping the protocol logic in one class makes it easier to follow the exchange from Alice's preparation through Bob's measurement, basis comparison, sampling, and key extraction.
+
+## 3. Modelling an intercept-resend eavesdropper
+
+The most interesting experiment in this project is the **intercept-resend attack**.
+
+For each qubit, Eve intercepts it with probability \(p\). If she does:
+
+1. She chooses one of the two bases at random.
+2. She measures the intercepted qubit.
+3. She prepares a new qubit using her measurement result and chosen basis.
+4. She sends that new qubit to Bob.
+
+If Eve chooses the wrong basis, her measurement can disturb the state. That disturbance can cause Bob to obtain a different bit from Alice, even when Alice and Bob happened to choose matching bases.
+
+### 3.1 Why is the expected QBER \(p/4\)?
+
+The **quantum bit error rate (QBER)** is the fraction of errors among the sifted bits.
+
+For an ideal intercept-resend attack, consider a bit that survives sifting, meaning Alice and Bob used the same basis.
+
+For that bit to be wrong:
+
+- Eve must intercept it: probability \(p\).
+- Eve must choose the other basis: probability \(1/2\).
+- Bob must then obtain the wrong bit: probability \(1/2\).
+
+Multiplying these independent probabilities gives:
+
+\[
+QBER_{\text{theoretical}}
+= p \times \frac{1}{2} \times \frac{1}{2}
+= \frac{p}{4}.
+\]
+
+This gives the simulator a theoretical prediction to compare against its measured results.
+
+The formula assumes ideal devices, the two BB84 bases, random independent basis choices, and the intercept-resend attack described above. It is not a general formula for every eavesdropping strategy or real QKD system.
+
+## 4. Testing the implementation
+
+Before running large experiments, I added unit tests for the basic behaviour of the model.
+
+The tests cover areas such as:
+
+- measuring a qubit in its preparation basis;
+- measuring in a different basis and checking that the result is a valid bit;
+- storing and retrieving data in a communication channel;
+- checking participant names and message broadcasting;
+- checking that Eve's interception probability of zero leaves the transmitted qubits unchanged;
+- checking that full interception produces replacement qubit objects.
+
+The tests passed. That was a useful milestone: it gave me confidence in the basic class behaviour before moving on to statistical experiments.
+
+There is an important distinction between **unit testing** and **validating a scientific model**. A test that checks that a measurement returns either 0 or 1 does not prove that the measurement probabilities are correct. Statistical tests and comparisons with theoretical predictions are also needed.
+
+For a more rigorous version, I would add tests for probability validation, empty samples, reproducibility with seeded random generators, and the expected error distribution over many trials.
+
+## 5. Turning the simulator into an experiment
+
+A simulator becomes much more useful when it can run the same experiment repeatedly and record the results.
+
+The next step is to run BB84 many times for different values of Eve's interception probability.
+
+For example, the experiment can use probabilities from 0 to 1 in increments of 0.1. For every probability, it can run many independent simulations.
+
+Each run should record quantities such as:
+
+| CSV column | Meaning |
+|---|---|
+| `experiment_id` | Identifier of the simulation run |
+| `eve_probability` | Probability that Eve intercepts each qubit |
+| `qubits_sent` | Number of qubits sent by Alice |
+| `sifted_bits` | Number of positions where Alice and Bob used matching bases |
+| `sample_bits` | Number of sifted bits disclosed for estimating errors |
+| `errors` | Number of mismatches found in the sample |
+| `qber` | `errors / sample_bits` |
+| `theoretical_qber` | The theoretical prediction, `eve_probability / 4` |
+| `key_bits` | Number of sifted positions left after sampling |
+| `accepted` | Whether the measured QBER is within the chosen threshold |
+
+The CSV file forms a clean boundary between the Java simulator and the Python analysis. Java is responsible for generating the data; Python is responsible for exploring and visualising it.
+
+A row in the file represents one simulation run, not an average over all repetitions.
+
+### 5.1 Why repeat the experiment?
+
+A single run is affected by randomness. Alice, Bob, and Eve all make random choices, and measurements in the wrong basis are probabilistic.
+
+Repeating the same experiment lets us estimate average behaviour and observe the spread of the results.
+
+The number of repetitions and the number of qubits per run both matter. Increasing them generally makes statistical estimates more stable, but it also increases computation time.
+
+## 6. Analysing the results with Python
+
+I use Python because its scientific ecosystem makes it convenient to load experimental data, calculate summary statistics, and create plots.
+
+The main libraries are:
+
+- **pandas** for reading and grouping CSV data;
+- **NumPy** for numerical calculations;
+- **Matplotlib** for plotting;
+- **Jupyter Notebook** for combining code, figures, and explanations.
+
+### 6.1 Load and inspect the data
+
+```python
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+data_path = Path("../results/bb84_results.csv")
+df = pd.read_csv(data_path)
+
+display(df.head())
+print("Dataset shape:", df.shape)
+display(df.describe())
+```
+
+It is important to inspect missing values and invalid rows before analysing the data:
+
+```python
+print(df.isna().sum())
+
+valid = df.loc[
+    (df["sample_bits"] > 0) & df["qber"].notna()
+].copy()
+```
+
+Runs with no sample bits do not provide a meaningful QBER. They should not be treated as zero-error runs.
+
+### 6.2 Compare experimental QBER with theory
+
+The first key plot compares the measured QBER against the theoretical line \(p/4\).
+
+```python
+summary = (
+    valid.groupby("eve_probability")
+    .agg(
+        mean_qber=("qber", "mean"),
+        std_qber=("qber", "std"),
+        repetitions=("qber", "count"),
+        total_errors=("errors", "sum"),
+        total_sample_bits=("sample_bits", "sum"),
+    )
+    .reset_index()
+)
+
+summary["standard_error"] = (
+    summary["std_qber"] / np.sqrt(summary["repetitions"])
+)
+
+summary["theoretical_qber"] = (
+    summary["eve_probability"] / 4
+)
+
+plt.figure(figsize=(9, 5))
+
+plt.errorbar(
+    summary["eve_probability"],
+    summary["mean_qber"],
+    yerr=summary["standard_error"],
+    marker="o",
+    capsize=4,
+    label="Experimental mean QBER",
+)
+
+plt.plot(
+    summary["eve_probability"],
+    summary["theoretical_qber"],
+    linestyle="--",
+    label="Theoretical QBER",
+)
+
+plt.xlabel("Eve interception probability")
+plt.ylabel("QBER")
+plt.title("Experimental and theoretical QBER")
+plt.grid(alpha=0.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+The error bars above show one standard error of the mean. They are a measure of uncertainty in the estimated mean, not the full spread of individual runs.
+
+Another useful statistic is the pooled QBER:
+
+\[
+QBER_{\text{pooled}} =
+\frac{\text{total errors across runs}}
+{\text{total sampled bits across runs}}.
+\]
+
+This weights each sampled bit equally. By contrast, the mean of the per-run QBER values gives each simulation run equal weight. Both can be useful, but they answer slightly different questions.
+
+### 6.3 Plot the protocol acceptance rate
+
+The simulator also makes a decision: accept or reject the candidate key based on the sampled QBER and a chosen error threshold.
+
+The acceptance rate for a given interception probability is:
+
+\[
+\text{Acceptance rate} =
+\frac{\text{number of accepted runs}}
+{\text{total number of runs}}.
+\]
+
+In pandas:
+
+```python
+acceptance = (
+    df.groupby("eve_probability")
+    .agg(
+        accepted=("accepted", "sum"),
+        total=("accepted", "count"),
+    )
+    .reset_index()
+)
+
+acceptance["acceptance_rate"] = (
+    acceptance["accepted"] / acceptance["total"]
+)
+
+display(acceptance)
+```
+
+And the plot:
+
+```python
+plt.figure(figsize=(9, 5))
+
+plt.plot(
+    acceptance["eve_probability"],
+    100 * acceptance["acceptance_rate"],
+    marker="o",
+    linewidth=2,
+)
+
+plt.xlabel("Eve interception probability")
+plt.ylabel("Accepted experiments (%)")
+plt.title("BB84 protocol acceptance rate")
+plt.ylim(-5, 105)
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+For an error threshold of 11%, the theoretical mean QBER crosses that threshold when:
+
+\[
+\frac{p}{4} = 0.11
+\quad\Longrightarrow\quad
+p = 0.44.
+\]
+
+This does **not** mean every run below 0.44 must be accepted or every run above it must be rejected. The protocol uses a finite random sample, so measured QBER fluctuates. The acceptance rate describes that probabilistic behaviour.
+
+### 6.4 Other useful plots
+
+Once the basic analysis works, several other plots can make the notebook more informative:
+
+- **QBER box plots:** show the distribution and spread of QBER across repeated runs.
+- **Potential key length:** show how many sifted bits remain after the sample is removed.
+- **Deviation from theory:** plot experimental mean QBER minus \(p/4\).
+- **Effect of sample size:** repeat experiments with different numbers of transmitted qubits and compare the uncertainty in the QBER estimate.
+
+These plots help distinguish the average theoretical behaviour from the randomness of finite experiments.
+
+## 7. What I learned
+
+This project brought together several ideas that are often studied separately.
+
+### Quantum information
+
+I learned how the choice of measurement basis affects the outcome of a qubit measurement, and why measuring in an incompatible basis can disturb the information being transmitted.
+
+### Probability and statistics
+
+The intercept-resend attack gave me a concrete example of conditional probabilities. The derivation of \(p/4\) showed how a simple theoretical model can predict the average behaviour of a simulation.
+
+Repeated experiments also made it clear that a theoretical expectation is not the same thing as the result of every individual run.
+
+### Object-oriented programming and software testing
+
+Representing Alice, Bob, Eve, qubits, channels, and protocols as separate classes helped me organise the program around the concepts of the protocol.
+
+Writing unit tests before running large experiments also reinforced the importance of checking small pieces of behaviour independently.
+
+### Scientific computing
+
+Exporting results to CSV and analysing them with pandas and Matplotlib created a workflow similar to a small computational experiment:
+
+1. define a model;
+2. implement the model;
+3. test the implementation;
+4. run repeated experiments;
+5. collect data;
+6. compare results with theory;
+7. interpret the limitations.
+
+## 8. How to build a similar project
+
+If you want to make a project that combines a scientific idea with software, I would recommend the following approach.
+
+1. **Start with one precise question.** For example: how does an intercept-resend attack affect the QBER in BB84?
+2. **Learn the mathematical model first.** Identify the states, probabilities, assumptions, and expected results before writing code.
+3. **Build the smallest useful model.** Implement a qubit, measurement, participants, and communication before adding more features.
+4. **Separate responsibilities.** Keep the physics model, protocol logic, experiment runner, and data analysis distinct.
+5. **Write tests early.** Test deterministic behaviour directly and use statistical tests for probabilistic behaviour.
+6. **Record raw experimental results.** Store one row per run so that the analysis can be repeated without rerunning the simulator.
+7. **Compare with theory.** A simulation is much more meaningful when there is an analytical prediction to test.
+8. **Document assumptions and limitations.** Explain what the model leaves out, rather than presenting a simplified simulation as a complete physical system.
+
+The most important lesson is that a good scientific programming project is not just a program that runs. It is a model whose assumptions are explicit, whose implementation is tested, and whose results can be compared with something independently derived.
+
+## 9. Limitations and possible improvements
+
+The current simulator is intentionally simplified. There are several directions in which it could be improved.
+
+- **Reproducible randomness:** use a shared, injectable random-number generator rather than calls to `Math.random()`. This makes experiments repeatable with a fixed seed.
+- **More statistical tests:** compare simulated QBER against the expected distribution, not only the expected mean.
+- **Random sampling:** ensure the test bits are selected randomly from the sifted bits.
+- **Finite-key effects:** investigate how the number of sampled bits affects confidence in the estimated QBER.
+- **Error correction and privacy amplification:** add simplified models of these post-processing stages to explore how raw key material becomes a shorter, corrected key.
+- **More attacks:** compare intercept-resend with other idealised attack models.
+- **A fuller quantum model:** represent states with vectors and measurement probabilities, rather than storing only a bit and a basis.
+
+These improvements would make the simulator more realistic, but each should be introduced with a clear mathematical model and tests.
+
+## Conclusion
+
+Building this BB84 simulator has been a practical way to explore quantum cryptography through programming. The project began with a small model of qubits and measurement, grew into an object-oriented simulation of Alice, Bob, and Eve, and then developed towards repeated experiments and statistical analysis.
+
+The most satisfying part is connecting the implementation to the theory: the simulator can measure the errors introduced by an intercept-resend attack and compare them with the prediction \(QBER=p/4\).
+
+There is still plenty to improve, especially around reproducibility, statistical validation, and the post-processing stages of QKD. That is part of what makes the project interesting: it provides a foundation for asking more precise questions and building increasingly realistic models.
+
+---
+
+## Reproducing the project
+
+The project uses Java for the simulator and Python for analysis. The exact commands depend on the local project setup, but a typical workflow is:
+
+```bash
+# Run the Java tests
+./mvnw test
+
+# Run the experiment program (if configured as described in the project)
+./mvnw compile exec:java -Dexec.mainClass="Experiments.Main"
+```
+
+Then open the Jupyter notebook from the project directory and load the generated CSV file.
+
+For the Python environment, install the analysis dependencies:
+
+```bash
+python3 -m pip install numpy pandas matplotlib jupyter
+```
+
+The repository and notebook should document the exact configuration used for each experiment, including the number of qubits, repetitions, Eve probabilities, error threshold, and random seed (when reproducible random generators have been implemented).

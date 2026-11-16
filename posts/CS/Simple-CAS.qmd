@@ -9,8 +9,39 @@ A Computer Algebra System (CAS) is a software that can perform symbolic mathemat
 Mathematics can be seen as language, we can write expression, those can be either true or false. We can have also equivalent expressions, and we can manipulate them to obtain new expressions. For example, let's consider the following definition:
 
 $$
-f \in \mathcal{C}^0(\mathbb{R}) \iff \forall \epsilon > 0, \exists \delta > 0, \forall x \in \mathbb{R}, |x - a| < \delta \implies |f(x) - f(a)| < \epsilon
+f \in \mathcal{C}^0(\mathbb{R}) \iff \forall x \in \mathbb{R}, \forall \epsilon > 0, \exists \delta > 0, \forall y \in \mathbb{R}, |x - y| < \delta \implies |f(x) - f(y)| < \epsilon
 $$
 
 This long expression, that only contains a few symbols, defines a continuous function. Through training and using representations, humans can understand and manipulate such expressions, but how would a computer do it?
 
+## Tree representation of expressions
+
+A general way to do this, which is widely used today, is to represent expressions as trees. Let's consider the following example: 
+
+$$
+x + \sin(3x + 2) = 0
+$$
+
+Each symbol and operator in this expression can be represented as a node in a tree, with the operators being the internal nodes and the symbols being the leaves. The tree representation of this expression would look like this:
+
+$$
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[level distance=1.5cm,
+  level 1/.style={sibling distance=4cm},
+  level 2/.style={sibling distance=2cm},
+  level 3/.style={sibling distance=1cm}]
+\node {=}
+  child {node {+}
+    child {node {x}}
+    child {node {$\sin$}
+      child {node {+}
+        child {node {3}}
+        child {node {x}}
+        child {node {2}}
+      }
+    }
+  }
+  child {node {0}};
+\end{tikzpicture}
+$$

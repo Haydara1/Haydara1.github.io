@@ -18,6 +18,8 @@ Mathematical models of physical phenomena.
 
 Quantum mechanics, information theory, and cryptography.
 
+[BB84 Quantum Key Distribution →](posts/Physics/BB84.qmd)
+
 ## Research notes
 
 Detailed explorations of papers, conjectures, and open problems.
