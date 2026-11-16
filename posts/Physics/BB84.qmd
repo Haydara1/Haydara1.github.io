@@ -17,6 +17,8 @@ I built the simulator in **Java** and planned the experimental analysis in **Pyt
 
 This post explains the ideas behind the project, the implementation, what I learned, and how someone else could build a similar project.
 
+You can check the full source code on [GitHub](https://github.com/Haydara1/Quantum-Cryptography-Simulator).
+
 ::: {.callout-note}
 This is an educational simulation of the idealised BB84 protocol and a simple intercept-resend attack. It is not a secure QKD implementation and should not be used to protect real communications.
 :::
@@ -27,7 +29,7 @@ BB84 was introduced by Charles Bennett and Gilles Brassard in 1984. Its central 
 
 A third party, **Eve**, represents a possible eavesdropper (spy).
 
-### 1.1 Bits, qubits, and bases
+### 1.1. Bits, qubits, and bases
 
 In this simulator, a qubit is represented by a bit value and the basis in which it was prepared.
 
@@ -50,7 +52,7 @@ $$
 
 This simple rule is the core of the simulator's `Qubit` model.
 
-### 1.2 The protocol, step by step
+### 1.2. The protocol, step by step
 
 A simplified BB84 exchange works as follows:
 
@@ -70,7 +72,7 @@ I chose Java because it provides a useful object-oriented structure for represen
 
 The project is organised around a few main components.
 
-### 2.1 The `Qubit` class
+### 2.1. The `Qubit` class
 
 The `Qubit` class represents the simplified quantum state used by the simulator. It stores:
 
@@ -81,7 +83,7 @@ Its measurement method takes a measurement basis. If that basis matches the prep
 
 This is not a full quantum-mechanical state-vector simulator. It is a deliberately small model that captures the measurement behaviour needed to study BB84.
 
-### 2.2 The participants
+### 2.2. The participants
 
 The simulator represents the three roles separately:
 
@@ -91,13 +93,13 @@ The simulator represents the three roles separately:
 
 Separating these roles makes the protocol easier to understand and gives each class a clear responsibility.
 
-### 2.3 Communication channels
+### 2.3. Communication channels
 
 I modelled communication with a `Communication` class. The project distinguishes between a quantum channel, over which qubits are sent, and a public classical channel, over which information such as basis choices is exchanged.
 
 This distinction matters conceptually: the quantum channel carries quantum states, while the classical channel is used for public discussion.
 
-### 2.4 The `Protocol` and `BB84` classes
+### 2.4. The `Protocol` and `BB84` classes
 
 The abstract `Protocol` class provides a common structure for protocols. `BB84` implements the actual sequence of operations.
 
@@ -116,7 +118,7 @@ For each qubit, Eve intercepts it with probability $p$. If she does:
 
 If Eve chooses the wrong basis, her measurement can disturb the state. That disturbance can cause Bob to obtain a different bit from Alice, even when Alice and Bob happened to choose matching bases.
 
-### 3.1 Why is the expected QBER $p/4$?
+### 3.1. Why is the expected QBER $\ p/4$?
 
 The **quantum bit error rate (QBER)** is the fraction of errors among the sifted bits.
 
@@ -186,7 +188,7 @@ The CSV file forms a clean boundary between the Java simulator and the Python an
 
 A row in the file represents one simulation run, not an average over all repetitions.
 
-### 5.1 Why repeat the experiment?
+### 5.1. Why repeat the experiment?
 
 A single run is affected by randomness. Alice, Bob, and Eve all make random choices, and measurements in the wrong basis are probabilistic.
 
@@ -205,7 +207,7 @@ The main libraries are:
 - **Matplotlib** for plotting;
 - **Jupyter Notebook** for combining code, figures, and explanations.
 
-### 6.1 Load and inspect the data
+### 6.1. Load and inspect the data
 
 ```python
 from pathlib import Path
@@ -221,7 +223,7 @@ display(df.head())
 
 Runs with no sample bits do not provide a meaningful QBER. They should not be treated as zero-error runs.
 
-### 6.2 Compare experimental QBER with theory
+### 6.2. Compare experimental QBER with theory
 
 The first key plot compares the measured QBER against the theoretical line $p/4$.
 
@@ -285,7 +287,7 @@ $$
 
 This weights each sampled bit equally. By contrast, the mean of the per-run QBER values gives each simulation run equal weight. Both can be useful, but they answer slightly different questions.
 
-### 6.3 Plot the protocol acceptance rate
+### 6.3. Plot the protocol acceptance rate
 
 The simulator also makes a decision: accept or reject the candidate key based on the sampled QBER and a chosen error threshold.
 
@@ -347,7 +349,7 @@ $$
 
 This does **not** mean every run below 0.44 must be accepted or every run above it must be rejected. The protocol uses a finite random sample, so measured QBER fluctuates. The acceptance rate describes that probabilistic behaviour.
 
-### 6.4 Other useful plots
+### 6.4. Other useful plots
 
 Once the basic analysis works, several other plots can make the notebook more informative:
 
@@ -368,7 +370,7 @@ I learned how the choice of measurement basis affects the outcome of a qubit mea
 
 ### Probability and statistics
 
-The intercept-resend attack gave me a concrete example of conditional probabilities. The derivation of \(p/4\) showed how a simple theoretical model can predict the average behaviour of a simulation.
+The intercept-resend attack gave me a concrete example of conditional probabilities. The derivation of $p/4$ showed how a simple theoretical model can predict the average behaviour of a simulation.
 
 Repeated experiments also made it clear that a theoretical expectation is not the same thing as the result of every individual run.
 
@@ -431,9 +433,19 @@ There is still plenty to improve, especially around reproducibility, statistical
 
 ## Reproducing the project
 
-The project uses Java for the simulator and Python for analysis. The exact commands depend on the local project setup, but a typical workflow is:
+The project uses Java for the simulator and Python for analysis. The typical workflow is:
 
 ```bash
+# Clone the repository
+git clone https://github.com/Haydara1/Quantum-Cryptography-Simulator.git
+
+cd Quantum-Cryptography-Simulator
+```
+
+```bash
+# Build the Java simulator
+./mvnw compile
+
 # Run the Java tests
 ./mvnw test
 
@@ -448,5 +460,3 @@ For the Python environment, install the analysis dependencies:
 ```bash
 python3 -m pip install numpy pandas matplotlib jupyter
 ```
-
-The repository and notebook should document the exact configuration used for each experiment, including the number of qubits, repetitions, Eve probabilities, error threshold, and random seed (when reproducible random generators have been implemented).
