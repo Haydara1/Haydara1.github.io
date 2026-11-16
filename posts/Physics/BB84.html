@@ -217,7 +217,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#modelling-an-intercept-resend-eavesdropper" id="toc-modelling-an-intercept-resend-eavesdropper" class="nav-link" data-scroll-target="#modelling-an-intercept-resend-eavesdropper">3. Modelling an intercept-resend eavesdropper</a>
   <ul class="collapse">
-  <li><a href="#why-is-the-expected-qber-p4" id="toc-why-is-the-expected-qber-p4" class="nav-link" data-scroll-target="#why-is-the-expected-qber-p4">3.1 Why is the expected QBER (p/4)?</a></li>
+  <li><a href="#why-is-the-expected-qber-p4" id="toc-why-is-the-expected-qber-p4" class="nav-link" data-scroll-target="#why-is-the-expected-qber-p4">3.1 Why is the expected QBER <span class="math inline">\(p/4\)</span>?</a></li>
   </ul></li>
   <li><a href="#testing-the-implementation" id="toc-testing-the-implementation" class="nav-link" data-scroll-target="#testing-the-implementation">4. Testing the implementation</a></li>
   <li><a href="#turning-the-simulator-into-an-experiment" id="toc-turning-the-simulator-into-an-experiment" class="nav-link" data-scroll-target="#turning-the-simulator-into-an-experiment">5. Turning the simulator into an experiment</a>
@@ -325,12 +325,13 @@ Note
 </ul>
 <p>The names are implementation choices; the important feature is that the two bases are mutually unbiased. If a qubit is measured in the basis in which it was prepared, the bit is recovered. If it is measured in the other basis, the result is random, with equal probability of 0 or 1.</p>
 <p>For the idealised model, this measurement rule can be represented as:</p>
-[ P() =
-<span class="math display">\[\begin{cases}
+<p><span class="math display">\[
+P(\text{correct bit}) =
+\begin{cases}
 1 &amp; \text{if the measurement basis matches the preparation basis},\\
 1/2 &amp; \text{otherwise}.
-\end{cases}\]</span>
-<p>]</p>
+\end{cases}
+\]</span></p>
 <p>This simple rule is the core of the simulator’s <code>Qubit</code> model.</p>
 </section>
 <section id="the-protocol-step-by-step" class="level3">
@@ -386,7 +387,7 @@ Note
 <section id="modelling-an-intercept-resend-eavesdropper" class="level2">
 <h2 class="anchored" data-anchor-id="modelling-an-intercept-resend-eavesdropper">3. Modelling an intercept-resend eavesdropper</h2>
 <p>The most interesting experiment in this project is the <strong>intercept-resend attack</strong>.</p>
-<p>For each qubit, Eve intercepts it with probability (p). If she does:</p>
+<p>For each qubit, Eve intercepts it with probability <span class="math inline">\(p\)</span>. If she does:</p>
 <ol type="1">
 <li>She chooses one of the two bases at random.</li>
 <li>She measures the intercepted qubit.</li>
@@ -395,17 +396,21 @@ Note
 </ol>
 <p>If Eve chooses the wrong basis, her measurement can disturb the state. That disturbance can cause Bob to obtain a different bit from Alice, even when Alice and Bob happened to choose matching bases.</p>
 <section id="why-is-the-expected-qber-p4" class="level3">
-<h3 class="anchored" data-anchor-id="why-is-the-expected-qber-p4">3.1 Why is the expected QBER (p/4)?</h3>
+<h3 class="anchored" data-anchor-id="why-is-the-expected-qber-p4">3.1 Why is the expected QBER <span class="math inline">\(p/4\)</span>?</h3>
 <p>The <strong>quantum bit error rate (QBER)</strong> is the fraction of errors among the sifted bits.</p>
 <p>For an ideal intercept-resend attack, consider a bit that survives sifting, meaning Alice and Bob used the same basis.</p>
 <p>For that bit to be wrong:</p>
 <ul>
-<li>Eve must intercept it: probability (p).</li>
-<li>Eve must choose the other basis: probability (1/2).</li>
-<li>Bob must then obtain the wrong bit: probability (1/2).</li>
+<li>Eve must intercept it: probability <span class="math inline">\(p\)</span>.</li>
+<li>Eve must choose the other basis: probability <span class="math inline">\(1/2\)</span>.</li>
+<li>Bob must then obtain the wrong bit: probability <span class="math inline">\(1/2\)</span>.</li>
 </ul>
 <p>Multiplying these independent probabilities gives:</p>
-<p>[ QBER_{} = p = . ]</p>
+<p><span class="math display">\[
+QBER_{\text{theoretical}}
+= p \times \frac{1}{2} \times \frac{1}{2}
+= \frac{p}{4}.
+\]</span></p>
 <p>This gives the simulator a theoretical prediction to compare against its measured results.</p>
 <p>The formula assumes ideal devices, the two BB84 bases, random independent basis choices, and the intercept-resend attack described above. It is not a general formula for every eavesdropping strategy or real QKD system.</p>
 </section>
@@ -513,112 +518,115 @@ Note
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> Path(<span class="st">"../results/bb84_results.csv"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(data_path)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>display(df.head())</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset shape:"</span>, df.shape)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>display(df.describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>It is important to inspect missing values and invalid rows before analysing the data:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isna().<span class="bu">sum</span>())</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>valid <span class="op">=</span> df.loc[</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (df[<span class="st">"sample_bits"</span>] <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> df[<span class="st">"qber"</span>].notna()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>].copy()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(bb84_results.csv)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>display(df.head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Runs with no sample bits do not provide a meaningful QBER. They should not be treated as zero-error runs.</p>
 </section>
 <section id="compare-experimental-qber-with-theory" class="level3">
 <h3 class="anchored" data-anchor-id="compare-experimental-qber-with-theory">6.2 Compare experimental QBER with theory</h3>
-<p>The first key plot compares the measured QBER against the theoretical line (p/4).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> (</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    valid.groupby(<span class="st">"eve_probability"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        mean_qber<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"mean"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        std_qber<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"std"</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        repetitions<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"count"</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        total_errors<span class="op">=</span>(<span class="st">"errors"</span>, <span class="st">"sum"</span>),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        total_sample_bits<span class="op">=</span>(<span class="st">"sample_bits"</span>, <span class="st">"sum"</span>),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">"standard_error"</span>] <span class="op">=</span> (</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"std_qber"</span>] <span class="op">/</span> np.sqrt(summary[<span class="st">"repetitions"</span>])</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">"theoretical_qber"</span>] <span class="op">=</span> (</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>] <span class="op">/</span> <span class="dv">4</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>plt.errorbar(</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>],</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"mean_qber"</span>],</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    yerr<span class="op">=</span>summary[<span class="st">"standard_error"</span>],</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    capsize<span class="op">=</span><span class="dv">4</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Experimental mean QBER"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>],</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"theoretical_qber"</span>],</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Theoretical QBER"</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Eve interception probability"</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"QBER"</span>)</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Experimental and theoretical QBER"</span>)</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first key plot compares the measured QBER against the theoretical line <span class="math inline">\(p/4\)</span>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    valid.groupby(<span class="st">"eve_probability"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        mean_qber<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        std_qber<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"std"</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        repetitions<span class="op">=</span>(<span class="st">"qber"</span>, <span class="st">"count"</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        total_errors<span class="op">=</span>(<span class="st">"errors"</span>, <span class="st">"sum"</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        total_sample_bits<span class="op">=</span>(<span class="st">"sample_bits"</span>, <span class="st">"sum"</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">"standard_error"</span>] <span class="op">=</span> (</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"std_qber"</span>] <span class="op">/</span> np.sqrt(summary[<span class="st">"repetitions"</span>])</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>summary[<span class="st">"theoretical_qber"</span>] <span class="op">=</span> (</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>] <span class="op">/</span> <span class="dv">4</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>plt.errorbar(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>],</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"mean_qber"</span>],</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    yerr<span class="op">=</span>summary[<span class="st">"standard_error"</span>],</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span>,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    capsize<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Experimental mean QBER"</span>,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"eve_probability"</span>],</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    summary[<span class="st">"theoretical_qber"</span>],</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">"Theoretical QBER"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Eve interception probability"</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"QBER"</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Experimental and theoretical QBER"</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The error bars above show one standard error of the mean. They are a measure of uncertainty in the estimated mean, not the full spread of individual runs.</p>
 <p>Another useful statistic is the pooled QBER:</p>
-<p>[ QBER_{} = {}. ]</p>
+<p><span class="math display">\[
+QBER_{\text{pooled}} =
+\frac{\text{total errors across runs}}
+{\text{total sampled bits across runs}}.
+\]</span></p>
 <p>This weights each sampled bit equally. By contrast, the mean of the per-run QBER values gives each simulation run equal weight. Both can be useful, but they answer slightly different questions.</p>
 </section>
 <section id="plot-the-protocol-acceptance-rate" class="level3">
 <h3 class="anchored" data-anchor-id="plot-the-protocol-acceptance-rate">6.3 Plot the protocol acceptance rate</h3>
 <p>The simulator also makes a decision: accept or reject the candidate key based on the sampled QBER and a chosen error threshold.</p>
 <p>The acceptance rate for a given interception probability is:</p>
-<p>[ = {}. ]</p>
+<p><span class="math display">\[
+\text{Acceptance rate} =
+\frac{\text{number of accepted runs}}
+{\text{total number of runs}}.
+\]</span></p>
 <p>In pandas:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>acceptance <span class="op">=</span> (</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    df.groupby(<span class="st">"eve_probability"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        accepted<span class="op">=</span>(<span class="st">"accepted"</span>, <span class="st">"sum"</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        total<span class="op">=</span>(<span class="st">"accepted"</span>, <span class="st">"count"</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>acceptance <span class="op">=</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    df.groupby(<span class="st">"eve_probability"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        accepted<span class="op">=</span>(<span class="st">"accepted"</span>, <span class="st">"sum"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        total<span class="op">=</span>(<span class="st">"accepted"</span>, <span class="st">"count"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>acceptance[<span class="st">"acceptance_rate"</span>] <span class="op">=</span> (</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    acceptance[<span class="st">"accepted"</span>] <span class="op">/</span> acceptance[<span class="st">"total"</span>]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>display(acceptance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And the plot:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    acceptance[<span class="st">"eve_probability"</span>],</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">100</span> <span class="op">*</span> acceptance[<span class="st">"acceptance_rate"</span>],</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">2</span>,</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>acceptance[<span class="st">"acceptance_rate"</span>] <span class="op">=</span> (</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    acceptance[<span class="st">"accepted"</span>] <span class="op">/</span> acceptance[<span class="st">"total"</span>]</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>display(acceptance)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>And the plot:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.plot(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    acceptance[<span class="st">"eve_probability"</span>],</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">100</span> <span class="op">*</span> acceptance[<span class="st">"acceptance_rate"</span>],</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    linewidth<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Eve interception probability"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Accepted experiments (%)"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"BB84 protocol acceptance rate"</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">105</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Eve interception probability"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Accepted experiments (%)"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"BB84 protocol acceptance rate"</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">105</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>For an error threshold of 11%, the theoretical mean QBER crosses that threshold when:</p>
-<p>[ = 0.11 p = 0.44. ]</p>
+<p><span class="math display">\[
+\frac{p}{4} = 0.11
+\quad\Longrightarrow\quad
+p = 0.44.
+\]</span></p>
 <p>This does <strong>not</strong> mean every run below 0.44 must be accepted or every run above it must be rejected. The protocol uses a finite random sample, so measured QBER fluctuates. The acceptance rate describes that probabilistic behaviour.</p>
 </section>
 <section id="other-useful-plots" class="level3">
@@ -627,7 +635,7 @@ Note
 <ul>
 <li><strong>QBER box plots:</strong> show the distribution and spread of QBER across repeated runs.</li>
 <li><strong>Potential key length:</strong> show how many sifted bits remain after the sample is removed.</li>
-<li><strong>Deviation from theory:</strong> plot experimental mean QBER minus (p/4).</li>
+<li><strong>Deviation from theory:</strong> plot experimental mean QBER minus <span class="math inline">\(p/4\)</span>.</li>
 <li><strong>Effect of sample size:</strong> repeat experiments with different numbers of transmitted qubits and compare the uncertainty in the QBER estimate.</li>
 </ul>
 <p>These plots help distinguish the average theoretical behaviour from the randomness of finite experiments.</p>
@@ -703,14 +711,14 @@ Note
 <section id="reproducing-the-project" class="level2">
 <h2 class="anchored" data-anchor-id="reproducing-the-project">Reproducing the project</h2>
 <p>The project uses Java for the simulator and Python for analysis. The exact commands depend on the local project setup, but a typical workflow is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the Java tests</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./mvnw</span> test</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the experiment program (if configured as described in the project)</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./mvnw</span> compile exec:java <span class="at">-Dexec.mainClass</span><span class="op">=</span><span class="st">"Experiments.Main"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the Java tests</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./mvnw</span> test</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the experiment program (if configured as described in the project)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./mvnw</span> compile exec:java <span class="at">-Dexec.mainClass</span><span class="op">=</span><span class="st">"Main"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then open the Jupyter notebook from the project directory and load the generated CSV file.</p>
 <p>For the Python environment, install the analysis dependencies:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> pip install numpy pandas matplotlib jupyter</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> pip install numpy pandas matplotlib jupyter</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The repository and notebook should document the exact configuration used for each experiment, including the number of qubits, repetitions, Eve probabilities, error threshold, and random seed (when reproducible random generators have been implemented).</p>
 
 
