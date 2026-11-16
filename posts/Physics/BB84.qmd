@@ -40,13 +40,13 @@ The names are implementation choices; the important feature is that the two base
 
 For the idealised model, this measurement rule can be represented as:
 
-\[
+$$
 P(\text{correct bit}) =
 \begin{cases}
 1 & \text{if the measurement basis matches the preparation basis},\\
 1/2 & \text{otherwise}.
 \end{cases}
-\]
+$$
 
 This simple rule is the core of the simulator's `Qubit` model.
 
@@ -107,7 +107,7 @@ Keeping the protocol logic in one class makes it easier to follow the exchange f
 
 The most interesting experiment in this project is the **intercept-resend attack**.
 
-For each qubit, Eve intercepts it with probability \(p\). If she does:
+For each qubit, Eve intercepts it with probability $p$. If she does:
 
 1. She chooses one of the two bases at random.
 2. She measures the intercepted qubit.
@@ -116,7 +116,7 @@ For each qubit, Eve intercepts it with probability \(p\). If she does:
 
 If Eve chooses the wrong basis, her measurement can disturb the state. That disturbance can cause Bob to obtain a different bit from Alice, even when Alice and Bob happened to choose matching bases.
 
-### 3.1 Why is the expected QBER \(p/4\)?
+### 3.1 Why is the expected QBER $p/4$?
 
 The **quantum bit error rate (QBER)** is the fraction of errors among the sifted bits.
 
@@ -124,17 +124,17 @@ For an ideal intercept-resend attack, consider a bit that survives sifting, mean
 
 For that bit to be wrong:
 
-- Eve must intercept it: probability \(p\).
-- Eve must choose the other basis: probability \(1/2\).
-- Bob must then obtain the wrong bit: probability \(1/2\).
+- Eve must intercept it: probability $p$.
+- Eve must choose the other basis: probability $1/2$.
+- Bob must then obtain the wrong bit: probability $1/2$.
 
 Multiplying these independent probabilities gives:
 
-\[
+$$
 QBER_{\text{theoretical}}
 = p \times \frac{1}{2} \times \frac{1}{2}
 = \frac{p}{4}.
-\]
+$$
 
 This gives the simulator a theoretical prediction to compare against its measured results.
 
@@ -214,29 +214,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data_path = Path("../results/bb84_results.csv")
-df = pd.read_csv(data_path)
+df = pd.read_csv(bb84_results.csv)
 
 display(df.head())
-print("Dataset shape:", df.shape)
-display(df.describe())
-```
-
-It is important to inspect missing values and invalid rows before analysing the data:
-
-```python
-print(df.isna().sum())
-
-valid = df.loc[
-    (df["sample_bits"] > 0) & df["qber"].notna()
-].copy()
 ```
 
 Runs with no sample bits do not provide a meaningful QBER. They should not be treated as zero-error runs.
 
 ### 6.2 Compare experimental QBER with theory
 
-The first key plot compares the measured QBER against the theoretical line \(p/4\).
+The first key plot compares the measured QBER against the theoretical line $p/4$.
 
 ```python
 summary = (
@@ -290,11 +277,11 @@ The error bars above show one standard error of the mean. They are a measure of 
 
 Another useful statistic is the pooled QBER:
 
-\[
+$$
 QBER_{\text{pooled}} =
 \frac{\text{total errors across runs}}
 {\text{total sampled bits across runs}}.
-\]
+$$
 
 This weights each sampled bit equally. By contrast, the mean of the per-run QBER values gives each simulation run equal weight. Both can be useful, but they answer slightly different questions.
 
@@ -304,11 +291,11 @@ The simulator also makes a decision: accept or reject the candidate key based on
 
 The acceptance rate for a given interception probability is:
 
-\[
+$$
 \text{Acceptance rate} =
 \frac{\text{number of accepted runs}}
 {\text{total number of runs}}.
-\]
+$$
 
 In pandas:
 
@@ -352,11 +339,11 @@ plt.show()
 
 For an error threshold of 11%, the theoretical mean QBER crosses that threshold when:
 
-\[
+$$
 \frac{p}{4} = 0.11
 \quad\Longrightarrow\quad
 p = 0.44.
-\]
+$$
 
 This does **not** mean every run below 0.44 must be accepted or every run above it must be rejected. The protocol uses a finite random sample, so measured QBER fluctuates. The acceptance rate describes that probabilistic behaviour.
 
@@ -366,7 +353,7 @@ Once the basic analysis works, several other plots can make the notebook more in
 
 - **QBER box plots:** show the distribution and spread of QBER across repeated runs.
 - **Potential key length:** show how many sifted bits remain after the sample is removed.
-- **Deviation from theory:** plot experimental mean QBER minus \(p/4\).
+- **Deviation from theory:** plot experimental mean QBER minus $p/4$.
 - **Effect of sample size:** repeat experiments with different numbers of transmitted qubits and compare the uncertainty in the QBER estimate.
 
 These plots help distinguish the average theoretical behaviour from the randomness of finite experiments.
@@ -451,7 +438,7 @@ The project uses Java for the simulator and Python for analysis. The exact comma
 ./mvnw test
 
 # Run the experiment program (if configured as described in the project)
-./mvnw compile exec:java -Dexec.mainClass="Experiments.Main"
+./mvnw compile exec:java -Dexec.mainClass="Main"
 ```
 
 Then open the Jupyter notebook from the project directory and load the generated CSV file.
