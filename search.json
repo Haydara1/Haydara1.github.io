@@ -1,47 +1,5 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "I am building this publication to explore mathematics, physics, and scientific computing through careful research and clear explanations.\nMy interests include mathematical analysis, abstract algebra, quantum mechanics, quantum cryptography, and computational modelling.\nThe aim is to make technical ideas accessible without sacrificing mathematical precision."
-  },
-  {
-    "objectID": "about.html#contact-and-code",
-    "href": "about.html#contact-and-code",
-    "title": "About",
-    "section": "Contact and code",
-    "text": "Contact and code\n\nMy GitHub profile\nMy LinkedIn profile"
-  },
-  {
-    "objectID": "posts/Physics/BB84.html",
-    "href": "posts/Physics/BB84.html",
-    "title": "Protocol BB84",
-    "section": "",
-    "text": "A glimpse into the first quantum key distribution protocol\n\n\nQuantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process.\n\n\n\nBefore diving into the BB84 protocol, it’s essential to understand some fundamental concepts in quantum mechanics.\n\nQubits: The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.\nQuantum states: The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are (|0) and (|1), which represent the classical bits 0 and 1, respectively.\n\nTo each bit, we can assign a basis: + The rectilinear basis: $$ + The diagonal basis\n\nMeasurement: In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome.\n\n\n\n\nHow to read this section?\nYou will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled “Security considerations” and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.\n\n\nSince this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn’t mean other parties can’t acces the information, but it means that we can be sure that the information is coming from the right source.\nSo for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.\nSeucrity considerations: Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.\n\n\n\nAlice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.\nMeanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.\nSeucrity considerations:\n\n\n\nAlice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.\nSeucrity considerations:\n\n\n\nBob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob’s bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.\nSeucrity considerations:\n\n\n\nAlice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.\nThe subset that they compare is called the punctured key, which will be discarded after the comparison."
-  },
-  {
-    "objectID": "posts/Physics/BB84.html#introduction",
-    "href": "posts/Physics/BB84.html#introduction",
-    "title": "Protocol BB84",
-    "section": "",
-    "text": "Quantum key distribution (QKD) is a method for two parties to securely share a secret key, which can then be used for encrypted communication. The BB84 protocol, proposed by Charles Bennett and Gilles Brassard in 1984, is one of the first and most well-known QKD protocols. It leverages the principles of quantum mechanics to ensure the security of the key distribution process."
-  },
-  {
-    "objectID": "posts/Physics/BB84.html#preliminary-concepts",
-    "href": "posts/Physics/BB84.html#preliminary-concepts",
-    "title": "Protocol BB84",
-    "section": "",
-    "text": "Before diving into the BB84 protocol, it’s essential to understand some fundamental concepts in quantum mechanics.\n\nQubits: The basic unit of quantum information, analogous to classical bits, but can exist in a superposition of states.\nQuantum states: The state of a qubit can be represented as a vector in a two-dimensional complex vector space. The most common states are (|0) and (|1), which represent the classical bits 0 and 1, respectively.\n\nTo each bit, we can assign a basis: + The rectilinear basis: $$ + The diagonal basis\n\nMeasurement: In quantum mechanics, measuring a qubit collapses its state to one of the basis states, and the outcome is probabilistic. The choice of measurement basis can affect the outcome."
-  },
-  {
-    "objectID": "posts/Physics/BB84.html#the-protocol",
-    "href": "posts/Physics/BB84.html#the-protocol",
-    "title": "Protocol BB84",
-    "section": "",
-    "text": "How to read this section?\nYou will find in this section a step-by-step descritption of the protocol. In each step, the last paragraph will be entitled “Security considerations” and will discuss the security implications of the step. I would suggest that you read the whole section without the security considerations first, and then go back to read them. This way you will have a better understanding of the protocol before thinking about its security.\n\n\nSince this is a key distribution protocol, we need to at least have a channel (generally authenticated) where we can communicate information. A channel being authenticated doesn’t mean other parties can’t acces the information, but it means that we can be sure that the information is coming from the right source.\nSo for this protocol, we will need to have a classical authenticated channel and a quantum channel. We will define as well Alice as the sender, Bob as the receiver, and Eve as the eavesdropper.\nSeucrity considerations: Notice how the quantum channel is not authenticated, this means that Eve can not only listen to the information being sent, but she can modify it as well, which will pose a problem for the security of the protocol later.\n\n\n\nAlice begins by preparing a sequence of qubits. For each qubit she randomly assigns a bit value (0 or 1) and a basis (rectilinear or diagonal). She then encodes the bit value into the qubit according to the chosen basis.\nMeanwhile Bob prepares a random sequence of bases (rectilinear or diagonal) for measuring the incoming qubits. He does not know the bit values or the bases chosen by Alice.\nSeucrity considerations:\n\n\n\nAlice sends the prepared sequence to Bob through the quantum channel. Bob measures each incoming qubit using his randomly chosen bases and records the results.\nSeucrity considerations:\n\n\n\nBob then communicates his chosen bases to Alice over the authenticated classical channel. Alice compares Bob’s bases with her own and informs him (using the classical channel) which bases were correct (i.e. the bases that matched). If we neglect the measurmenent errors (due to equipement) the bits corresponding to the correct bases will be the same for both Alice and Bob with a 100% probability, while the bits corresponding to the incorrect bases will be random.\nSeucrity considerations:\n\n\n\nAlice and Bob now have a shared sequence of bits corresponding to the correct bases. To make sure that everything went well, they can perform a test by publicly comparing a subset (that they have chosen beforehand, generally the first half of the correct bits) of their shared bits. If the bits match, they can be confident that the key is secure.\nThe subset that they compare is called the punctured key, which will be discarded after the comparison."
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Mathematics, Physics, and Scientific Computing",
@@ -54,6 +12,34 @@
     "title": "Mathematics, Physics, and Scientific Computing",
     "section": "Explore the publication",
     "text": "Explore the publication\n\n\n\nMathematics\nFrom abstract algebra and analysis to mathematical structures that appear throughout science.\n\n\nExplore mathematics →\n\n\n\n\nPhysics\nUnderstand physical phenomena through mathematical models, derivations, and first principles.\n\n\nExplore physics →\n\n\n\n\nQuantum information\nExplore quantum states, quantum measurements, and the mathematics of quantum cryptography.\n\n\nExplore quantum information →\n\n\n\n\nScientific computing\nNumerical experiments, simulations, visualisations, and code that connect mathematical theory to computational results.\n\n\nExplore projects →"
+  },
+  {
+    "objectID": "posts/CS/Simple-CAS.html",
+    "href": "posts/CS/Simple-CAS.html",
+    "title": "Build your own simple CAS",
+    "section": "",
+    "text": "A Computer Algebra System (CAS) is a software that can perform symbolic mathematics. In this post, we will discuss how to build a simple CAS. The goal is to understand the basic principles behind symbolic computation and how to implement them in code."
+  },
+  {
+    "objectID": "posts/CS/Simple-CAS.html#tree-representation-of-expressions",
+    "href": "posts/CS/Simple-CAS.html#tree-representation-of-expressions",
+    "title": "Build your own simple CAS",
+    "section": "Tree representation of expressions",
+    "text": "Tree representation of expressions\nA general way to do this, which is widely used today, is to represent expressions as trees. Let’s consider the following example:\n\\[\nx + \\sin(3x + 2) = 0\n\\]\nEach symbol and operator in this expression can be represented as a node in a tree, with the operators being the internal nodes and the symbols being the leaves. The tree representation of this expression would look like this:\n\\[\n\\usepackage{tikz}\n\\begin{document}\n\\begin{tikzpicture}[level distance=1.5cm,\n  level 1/.style={sibling distance=4cm},\n  level 2/.style={sibling distance=2cm},\n  level 3/.style={sibling distance=1cm}]\n\\node {=}\n  child {node {+}\n    child {node {x}}\n    child {node {$\\sin$}\n      child {node {+}\n        child {node {3}}\n        child {node {x}}\n        child {node {2}}\n      }\n    }\n  }\n  child {node {0}};\n\\end{tikzpicture}\n\\]"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "I am building this publication to explore mathematics, physics, and scientific computing through careful research and clear explanations.\nMy interests include mathematical analysis, abstract algebra, quantum mechanics, quantum cryptography, and computational modelling.\nThe aim is to make technical ideas accessible without sacrificing mathematical precision."
+  },
+  {
+    "objectID": "about.html#contact-and-code",
+    "href": "about.html#contact-and-code",
+    "title": "About",
+    "section": "Contact and code",
+    "text": "Contact and code\n\nMy GitHub profile\nMy LinkedIn profile"
   },
   {
     "objectID": "projects.html",
@@ -70,11 +56,95 @@
     "text": "Featured projects"
   },
   {
-    "objectID": "posts/CS/Simple-CAS.html",
-    "href": "posts/CS/Simple-CAS.html",
-    "title": "Build your own simple CAS",
+    "objectID": "posts/Physics/BB84.html",
+    "href": "posts/Physics/BB84.html",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
     "section": "",
-    "text": "A Computer Algebra System (CAS) is a software that can perform symbolic mathematics. In this post, we will discuss how to build a simple CAS. The goal is to understand the basic principles behind symbolic computation and how to implement them in code.\n\nIntroduction:\nMathematics can be seen as language, we can write expression, those can be either true or false. We can have also equivalent expressions, and we can manipulate them to obtain new expressions. For example, let’s consider the following definition:\n\\[\nf \\in \\mathcal{C}^0(\\mathbb{R}) \\iff \\forall \\epsilon &gt; 0, \\exists \\delta &gt; 0, \\forall x \\in \\mathbb{R}, |x - a| &lt; \\delta \\implies |f(x) - f(a)| &lt; \\epsilon\n\\]\nThis long expression, that only contains a few symbols, defines a continuous function. Through training and using representations, humans can understand and manipulate such expressions, but how would a computer do it?"
+    "text": "Quantum cryptography is one of the most interesting places where mathematics, physics, and computer science meet. I wanted to explore that intersection by building a small simulator of BB84, one of the best-known quantum key distribution (QKD) protocols.\nThe goal was not to build a production-ready cryptographic system. Instead, I wanted to understand the protocol by implementing its main steps, testing the software, and investigating how an eavesdropper can introduce detectable errors.\nI built the simulator in Java and planned the experimental analysis in Python, using a CSV file to transfer results from the simulator into a Jupyter notebook.\nThis post explains the ideas behind the project, the implementation, what I learned, and how someone else could build a similar project.\n\n\n\n\n\n\nNote\n\n\n\nThis is an educational simulation of the idealised BB84 protocol and a simple intercept-resend attack. It is not a secure QKD implementation and should not be used to protect real communications."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#introduction",
+    "href": "posts/Physics/BB84.html#introduction",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "",
+    "text": "Quantum cryptography is one of the most interesting places where mathematics, physics, and computer science meet. I wanted to explore that intersection by building a small simulator of BB84, one of the best-known quantum key distribution (QKD) protocols.\nThe goal was not to build a production-ready cryptographic system. Instead, I wanted to understand the protocol by implementing its main steps, testing the software, and investigating how an eavesdropper can introduce detectable errors.\nI built the simulator in Java and planned the experimental analysis in Python, using a CSV file to transfer results from the simulator into a Jupyter notebook.\nThis post explains the ideas behind the project, the implementation, what I learned, and how someone else could build a similar project.\n\n\n\n\n\n\nNote\n\n\n\nThis is an educational simulation of the idealised BB84 protocol and a simple intercept-resend attack. It is not a secure QKD implementation and should not be used to protect real communications."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#the-idea-behind-bb84",
+    "href": "posts/Physics/BB84.html#the-idea-behind-bb84",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "1. The idea behind BB84",
+    "text": "1. The idea behind BB84\nBB84 was introduced by Charles Bennett and Gilles Brassard in 1984. Its central idea is that two parties, conventionally called Alice and Bob, can establish a shared bit string by sending quantum states and publicly comparing the bases they used.\nA third party, Eve, represents a possible eavesdropper (spy).\n\n1.1 Bits, qubits, and bases\nIn this simulator, a qubit is represented by a bit value and the basis in which it was prepared.\nI use two bases:\n\nThe computational basis, written here as PLUS: states representing bit 0 and bit 1.\nThe diagonal basis, written here as TIMES: two states rotated by 45 degrees relative to the computational basis.\n\nThe names are implementation choices; the important feature is that the two bases are mutually unbiased. If a qubit is measured in the basis in which it was prepared, the bit is recovered. If it is measured in the other basis, the result is random, with equal probability of 0 or 1.\nFor the idealised model, this measurement rule can be represented as:\n[ P() =\n\\[\\begin{cases}\n1 & \\text{if the measurement basis matches the preparation basis},\\\\\n1/2 & \\text{otherwise}.\n\\end{cases}\\]\n]\nThis simple rule is the core of the simulator’s Qubit model.\n\n\n1.2 The protocol, step by step\nA simplified BB84 exchange works as follows:\n\nAlice randomly generates a sequence of bits.\nAlice independently chooses a random basis for each bit and prepares the corresponding qubit.\nBob independently chooses a random basis for each incoming qubit and measures it.\nOver a public classical channel, Alice and Bob compare the bases they used, but not the entire bit sequence.\nThey keep only the positions where their bases matched. This is called sifting.\nThey publicly compare a randomly selected subset of the sifted bits to estimate the error rate.\nIf the estimated error rate is acceptable, the remaining bits can be treated as candidate key material.\n\nA real QKD system needs additional steps, including authenticated classical communication, error correction, privacy amplification, and finite-key security analysis. Those are outside the scope of this project."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#modelling-the-protocol-in-java",
+    "href": "posts/Physics/BB84.html#modelling-the-protocol-in-java",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "2. Modelling the protocol in Java",
+    "text": "2. Modelling the protocol in Java\nI chose Java because it provides a useful object-oriented structure for representing the participants, quantum states, communication channels, and protocol itself.\nThe project is organised around a few main components.\n\n2.1 The Qubit class\nThe Qubit class represents the simplified quantum state used by the simulator. It stores:\n\nthe bit value;\nthe preparation basis.\n\nIts measurement method takes a measurement basis. If that basis matches the preparation basis, it returns the original bit. Otherwise, it returns a random bit.\nThis is not a full quantum-mechanical state-vector simulator. It is a deliberately small model that captures the measurement behaviour needed to study BB84.\n\n\n2.2 The participants\nThe simulator represents the three roles separately:\n\nAlice prepares and sends the qubits.\nBob chooses measurement bases and measures the received qubits.\nEve can intercept qubits, measure them using her own randomly chosen bases, and resend newly prepared qubits.\n\nSeparating these roles makes the protocol easier to understand and gives each class a clear responsibility.\n\n\n2.3 Communication channels\nI modelled communication with a Communication class. The project distinguishes between a quantum channel, over which qubits are sent, and a public classical channel, over which information such as basis choices is exchanged.\nThis distinction matters conceptually: the quantum channel carries quantum states, while the classical channel is used for public discussion.\n\n\n2.4 The Protocol and BB84 classes\nThe abstract Protocol class provides a common structure for protocols. BB84 implements the actual sequence of operations.\nKeeping the protocol logic in one class makes it easier to follow the exchange from Alice’s preparation through Bob’s measurement, basis comparison, sampling, and key extraction."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#modelling-an-intercept-resend-eavesdropper",
+    "href": "posts/Physics/BB84.html#modelling-an-intercept-resend-eavesdropper",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "3. Modelling an intercept-resend eavesdropper",
+    "text": "3. Modelling an intercept-resend eavesdropper\nThe most interesting experiment in this project is the intercept-resend attack.\nFor each qubit, Eve intercepts it with probability (p). If she does:\n\nShe chooses one of the two bases at random.\nShe measures the intercepted qubit.\nShe prepares a new qubit using her measurement result and chosen basis.\nShe sends that new qubit to Bob.\n\nIf Eve chooses the wrong basis, her measurement can disturb the state. That disturbance can cause Bob to obtain a different bit from Alice, even when Alice and Bob happened to choose matching bases.\n\n3.1 Why is the expected QBER (p/4)?\nThe quantum bit error rate (QBER) is the fraction of errors among the sifted bits.\nFor an ideal intercept-resend attack, consider a bit that survives sifting, meaning Alice and Bob used the same basis.\nFor that bit to be wrong:\n\nEve must intercept it: probability (p).\nEve must choose the other basis: probability (1/2).\nBob must then obtain the wrong bit: probability (1/2).\n\nMultiplying these independent probabilities gives:\n[ QBER_{} = p = . ]\nThis gives the simulator a theoretical prediction to compare against its measured results.\nThe formula assumes ideal devices, the two BB84 bases, random independent basis choices, and the intercept-resend attack described above. It is not a general formula for every eavesdropping strategy or real QKD system."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#testing-the-implementation",
+    "href": "posts/Physics/BB84.html#testing-the-implementation",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "4. Testing the implementation",
+    "text": "4. Testing the implementation\nBefore running large experiments, I added unit tests for the basic behaviour of the model.\nThe tests cover areas such as:\n\nmeasuring a qubit in its preparation basis;\nmeasuring in a different basis and checking that the result is a valid bit;\nstoring and retrieving data in a communication channel;\nchecking participant names and message broadcasting;\nchecking that Eve’s interception probability of zero leaves the transmitted qubits unchanged;\nchecking that full interception produces replacement qubit objects.\n\nThe tests passed. That was a useful milestone: it gave me confidence in the basic class behaviour before moving on to statistical experiments.\nThere is an important distinction between unit testing and validating a scientific model. A test that checks that a measurement returns either 0 or 1 does not prove that the measurement probabilities are correct. Statistical tests and comparisons with theoretical predictions are also needed.\nFor a more rigorous version, I would add tests for probability validation, empty samples, reproducibility with seeded random generators, and the expected error distribution over many trials."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#turning-the-simulator-into-an-experiment",
+    "href": "posts/Physics/BB84.html#turning-the-simulator-into-an-experiment",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "5. Turning the simulator into an experiment",
+    "text": "5. Turning the simulator into an experiment\nA simulator becomes much more useful when it can run the same experiment repeatedly and record the results.\nThe next step is to run BB84 many times for different values of Eve’s interception probability.\nFor example, the experiment can use probabilities from 0 to 1 in increments of 0.1. For every probability, it can run many independent simulations.\nEach run should record quantities such as:\n\n\n\n\n\n\n\nCSV column\nMeaning\n\n\n\n\nexperiment_id\nIdentifier of the simulation run\n\n\neve_probability\nProbability that Eve intercepts each qubit\n\n\nqubits_sent\nNumber of qubits sent by Alice\n\n\nsifted_bits\nNumber of positions where Alice and Bob used matching bases\n\n\nsample_bits\nNumber of sifted bits disclosed for estimating errors\n\n\nerrors\nNumber of mismatches found in the sample\n\n\nqber\nerrors / sample_bits\n\n\ntheoretical_qber\nThe theoretical prediction, eve_probability / 4\n\n\nkey_bits\nNumber of sifted positions left after sampling\n\n\naccepted\nWhether the measured QBER is within the chosen threshold\n\n\n\nThe CSV file forms a clean boundary between the Java simulator and the Python analysis. Java is responsible for generating the data; Python is responsible for exploring and visualising it.\nA row in the file represents one simulation run, not an average over all repetitions.\n\n5.1 Why repeat the experiment?\nA single run is affected by randomness. Alice, Bob, and Eve all make random choices, and measurements in the wrong basis are probabilistic.\nRepeating the same experiment lets us estimate average behaviour and observe the spread of the results.\nThe number of repetitions and the number of qubits per run both matter. Increasing them generally makes statistical estimates more stable, but it also increases computation time."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#analysing-the-results-with-python",
+    "href": "posts/Physics/BB84.html#analysing-the-results-with-python",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "6. Analysing the results with Python",
+    "text": "6. Analysing the results with Python\nI use Python because its scientific ecosystem makes it convenient to load experimental data, calculate summary statistics, and create plots.\nThe main libraries are:\n\npandas for reading and grouping CSV data;\nNumPy for numerical calculations;\nMatplotlib for plotting;\nJupyter Notebook for combining code, figures, and explanations.\n\n\n6.1 Load and inspect the data\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ndata_path = Path(\"../results/bb84_results.csv\")\ndf = pd.read_csv(data_path)\n\ndisplay(df.head())\nprint(\"Dataset shape:\", df.shape)\ndisplay(df.describe())\nIt is important to inspect missing values and invalid rows before analysing the data:\nprint(df.isna().sum())\n\nvalid = df.loc[\n    (df[\"sample_bits\"] &gt; 0) & df[\"qber\"].notna()\n].copy()\nRuns with no sample bits do not provide a meaningful QBER. They should not be treated as zero-error runs.\n\n\n6.2 Compare experimental QBER with theory\nThe first key plot compares the measured QBER against the theoretical line (p/4).\nsummary = (\n    valid.groupby(\"eve_probability\")\n    .agg(\n        mean_qber=(\"qber\", \"mean\"),\n        std_qber=(\"qber\", \"std\"),\n        repetitions=(\"qber\", \"count\"),\n        total_errors=(\"errors\", \"sum\"),\n        total_sample_bits=(\"sample_bits\", \"sum\"),\n    )\n    .reset_index()\n)\n\nsummary[\"standard_error\"] = (\n    summary[\"std_qber\"] / np.sqrt(summary[\"repetitions\"])\n)\n\nsummary[\"theoretical_qber\"] = (\n    summary[\"eve_probability\"] / 4\n)\n\nplt.figure(figsize=(9, 5))\n\nplt.errorbar(\n    summary[\"eve_probability\"],\n    summary[\"mean_qber\"],\n    yerr=summary[\"standard_error\"],\n    marker=\"o\",\n    capsize=4,\n    label=\"Experimental mean QBER\",\n)\n\nplt.plot(\n    summary[\"eve_probability\"],\n    summary[\"theoretical_qber\"],\n    linestyle=\"--\",\n    label=\"Theoretical QBER\",\n)\n\nplt.xlabel(\"Eve interception probability\")\nplt.ylabel(\"QBER\")\nplt.title(\"Experimental and theoretical QBER\")\nplt.grid(alpha=0.3)\nplt.legend()\nplt.tight_layout()\nplt.show()\nThe error bars above show one standard error of the mean. They are a measure of uncertainty in the estimated mean, not the full spread of individual runs.\nAnother useful statistic is the pooled QBER:\n[ QBER_{} = {}. ]\nThis weights each sampled bit equally. By contrast, the mean of the per-run QBER values gives each simulation run equal weight. Both can be useful, but they answer slightly different questions.\n\n\n6.3 Plot the protocol acceptance rate\nThe simulator also makes a decision: accept or reject the candidate key based on the sampled QBER and a chosen error threshold.\nThe acceptance rate for a given interception probability is:\n[ = {}. ]\nIn pandas:\nacceptance = (\n    df.groupby(\"eve_probability\")\n    .agg(\n        accepted=(\"accepted\", \"sum\"),\n        total=(\"accepted\", \"count\"),\n    )\n    .reset_index()\n)\n\nacceptance[\"acceptance_rate\"] = (\n    acceptance[\"accepted\"] / acceptance[\"total\"]\n)\n\ndisplay(acceptance)\nAnd the plot:\nplt.figure(figsize=(9, 5))\n\nplt.plot(\n    acceptance[\"eve_probability\"],\n    100 * acceptance[\"acceptance_rate\"],\n    marker=\"o\",\n    linewidth=2,\n)\n\nplt.xlabel(\"Eve interception probability\")\nplt.ylabel(\"Accepted experiments (%)\")\nplt.title(\"BB84 protocol acceptance rate\")\nplt.ylim(-5, 105)\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.show()\nFor an error threshold of 11%, the theoretical mean QBER crosses that threshold when:\n[ = 0.11 p = 0.44. ]\nThis does not mean every run below 0.44 must be accepted or every run above it must be rejected. The protocol uses a finite random sample, so measured QBER fluctuates. The acceptance rate describes that probabilistic behaviour.\n\n\n6.4 Other useful plots\nOnce the basic analysis works, several other plots can make the notebook more informative:\n\nQBER box plots: show the distribution and spread of QBER across repeated runs.\nPotential key length: show how many sifted bits remain after the sample is removed.\nDeviation from theory: plot experimental mean QBER minus (p/4).\nEffect of sample size: repeat experiments with different numbers of transmitted qubits and compare the uncertainty in the QBER estimate.\n\nThese plots help distinguish the average theoretical behaviour from the randomness of finite experiments."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#what-i-learned",
+    "href": "posts/Physics/BB84.html#what-i-learned",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "7. What I learned",
+    "text": "7. What I learned\nThis project brought together several ideas that are often studied separately.\n\nQuantum information\nI learned how the choice of measurement basis affects the outcome of a qubit measurement, and why measuring in an incompatible basis can disturb the information being transmitted.\n\n\nProbability and statistics\nThe intercept-resend attack gave me a concrete example of conditional probabilities. The derivation of (p/4) showed how a simple theoretical model can predict the average behaviour of a simulation.\nRepeated experiments also made it clear that a theoretical expectation is not the same thing as the result of every individual run.\n\n\nObject-oriented programming and software testing\nRepresenting Alice, Bob, Eve, qubits, channels, and protocols as separate classes helped me organise the program around the concepts of the protocol.\nWriting unit tests before running large experiments also reinforced the importance of checking small pieces of behaviour independently.\n\n\nScientific computing\nExporting results to CSV and analysing them with pandas and Matplotlib created a workflow similar to a small computational experiment:\n\ndefine a model;\nimplement the model;\ntest the implementation;\nrun repeated experiments;\ncollect data;\ncompare results with theory;\ninterpret the limitations."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#how-to-build-a-similar-project",
+    "href": "posts/Physics/BB84.html#how-to-build-a-similar-project",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "8. How to build a similar project",
+    "text": "8. How to build a similar project\nIf you want to make a project that combines a scientific idea with software, I would recommend the following approach.\n\nStart with one precise question. For example: how does an intercept-resend attack affect the QBER in BB84?\nLearn the mathematical model first. Identify the states, probabilities, assumptions, and expected results before writing code.\nBuild the smallest useful model. Implement a qubit, measurement, participants, and communication before adding more features.\nSeparate responsibilities. Keep the physics model, protocol logic, experiment runner, and data analysis distinct.\nWrite tests early. Test deterministic behaviour directly and use statistical tests for probabilistic behaviour.\nRecord raw experimental results. Store one row per run so that the analysis can be repeated without rerunning the simulator.\nCompare with theory. A simulation is much more meaningful when there is an analytical prediction to test.\nDocument assumptions and limitations. Explain what the model leaves out, rather than presenting a simplified simulation as a complete physical system.\n\nThe most important lesson is that a good scientific programming project is not just a program that runs. It is a model whose assumptions are explicit, whose implementation is tested, and whose results can be compared with something independently derived."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#limitations-and-possible-improvements",
+    "href": "posts/Physics/BB84.html#limitations-and-possible-improvements",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "9. Limitations and possible improvements",
+    "text": "9. Limitations and possible improvements\nThe current simulator is intentionally simplified. There are several directions in which it could be improved.\n\nReproducible randomness: use a shared, injectable random-number generator rather than calls to Math.random(). This makes experiments repeatable with a fixed seed.\nMore statistical tests: compare simulated QBER against the expected distribution, not only the expected mean.\nRandom sampling: ensure the test bits are selected randomly from the sifted bits.\nFinite-key effects: investigate how the number of sampled bits affects confidence in the estimated QBER.\nError correction and privacy amplification: add simplified models of these post-processing stages to explore how raw key material becomes a shorter, corrected key.\nMore attacks: compare intercept-resend with other idealised attack models.\nA fuller quantum model: represent states with vectors and measurement probabilities, rather than storing only a bit and a basis.\n\nThese improvements would make the simulator more realistic, but each should be introduced with a clear mathematical model and tests."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#conclusion",
+    "href": "posts/Physics/BB84.html#conclusion",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "Conclusion",
+    "text": "Conclusion\nBuilding this BB84 simulator has been a practical way to explore quantum cryptography through programming. The project began with a small model of qubits and measurement, grew into an object-oriented simulation of Alice, Bob, and Eve, and then developed towards repeated experiments and statistical analysis.\nThe most satisfying part is connecting the implementation to the theory: the simulator can measure the errors introduced by an intercept-resend attack and compare them with the prediction (QBER=p/4).\nThere is still plenty to improve, especially around reproducibility, statistical validation, and the post-processing stages of QKD. That is part of what makes the project interesting: it provides a foundation for asking more precise questions and building increasingly realistic models."
+  },
+  {
+    "objectID": "posts/Physics/BB84.html#reproducing-the-project",
+    "href": "posts/Physics/BB84.html#reproducing-the-project",
+    "title": "Building a BB84 Quantum Cryptography Simulator in Java",
+    "section": "Reproducing the project",
+    "text": "Reproducing the project\nThe project uses Java for the simulator and Python for analysis. The exact commands depend on the local project setup, but a typical workflow is:\n# Run the Java tests\n./mvnw test\n\n# Run the experiment program (if configured as described in the project)\n./mvnw compile exec:java -Dexec.mainClass=\"Experiments.Main\"\nThen open the Jupyter notebook from the project directory and load the generated CSV file.\nFor the Python environment, install the analysis dependencies:\npython3 -m pip install numpy pandas matplotlib jupyter\nThe repository and notebook should document the exact configuration used for each experiment, including the number of qubits, repetitions, Eve probabilities, error threshold, and random seed (when reproducible random generators have been implemented)."
   },
   {
     "objectID": "articles.html",
@@ -102,7 +172,7 @@
     "href": "articles.html#quantum-information",
     "title": "Articles",
     "section": "Quantum information",
-    "text": "Quantum information\nQuantum mechanics, information theory, and cryptography."
+    "text": "Quantum information\nQuantum mechanics, information theory, and cryptography.\nBB84 Quantum Key Distribution →"
   },
   {
     "objectID": "articles.html#research-notes",
